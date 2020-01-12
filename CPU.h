@@ -24,26 +24,26 @@ public:
     uint8_t sound_timer = 0;
     //MEMORY
     uint8_t memory[0x1000];
-    void CLS(u_int16_t op)
+    void CLS(uint16_t op)
     {
         cout << "clear display" << op << endl;
     }
-    void RET(u_int16_t op)
+    void RET(uint16_t op)
     {
         pc = s.top();
         sp--;
     }
-    void JP(u_int16_t op)
+    void JP(uint16_t op)
     {
         pc = op & 0x0FFF;
     }
-    void CALL(u_int16_t op)
+    void CALL(uint16_t op)
     {   sp++;
         s.push(pc);
         pc = op & 0x0FFF;
 
     }
-    void SEVX(u_int16_t op)
+    void SEVX(uint16_t op)
     {
         if (V[(op & 0x0F00) >> 8] == (op & 0x00FF))
         {
@@ -53,7 +53,7 @@ public:
         }
 
     }
-    void SNEVX(u_int16_t op)
+    void SNEVX(uint16_t op)
     {
         if (V[(op & 0x0F00) >> 8] != (op & 0x00FF))
         {
@@ -63,7 +63,7 @@ public:
         }
 
     }
-    void SE(u_int16_t op)
+    void SE(uint16_t op)
     {
         if (V[(op & 0x0F00) >> 8] == V[(op & 0x00F0 >> 4)])
         {
@@ -73,18 +73,18 @@ public:
         }
 
     }
-    void LDVX(u_int16_t op)
+    void LDVX(uint16_t op)
     {
         V[(op & 0x0F00) >> 8] = op & 0x00FF;
         pc += 2;
     }
-    void ADDVX(u_int16_t op)
+    void ADDVX(uint16_t op)
     {
         V[(op & 0x0F00) >> 8] = V[(op & 0x0F00) >> 8] + (op & 0x00FF);
         pc += 2;
     }
 
-    void SNE(u_int16_t op)
+    void SNE(uint16_t op)
     {
         if (V[(op & 0x0F00) >> 8] != (op & 0x00F0) >> 4 )
         {
@@ -94,27 +94,27 @@ public:
         }
 
     }
-    void LD(u_int16_t op)
+    void LD(uint16_t op)
     {
         V[(op & 0x0F00) >> 8] = V[(op & 0x00F0) >> 4];
         pc += 2;
     }
-    void OR(u_int16_t op)
+    void OR(uint16_t op)
     {
         V[(op & 0x0F00) >> 8]=  (V[(op & 0x0F00) >> 8] | V[(op & 0x00F0) >> 4]);
         pc += 2;
     }
-    void AND(u_int16_t op)
+    void AND(uint16_t op)
     {
         V[(op & 0x0F00) >> 8]=  (V[(op & 0x0F00) >> 8] & V[(op & 0x00F0) >> 4]);
         pc += 2;
     }
-    void XOR(u_int16_t op)
+    void XOR(uint16_t op)
     {
         V[(op & 0x0F00) >> 8]=  (V[(op & 0x0F00) >> 8] ^ V[(op & 0x00F0) >> 4]);
         pc += 2;
     }
-    void ADD(u_int16_t op)
+    void ADD(uint16_t op)
     {
        uint16_t sum = V[(op & 0x0F00) >> 8] + V[(op & 0x00F0) >> 4];
         if (sum > 0xFF)
@@ -130,7 +130,7 @@ public:
         pc += 2;
     }
 
-    void SUB(u_int16_t op)
+    void SUB(uint16_t op)
     {
         if(V[(op & 0x0F00) >> 8] > V[(op & 0x00F0) >> 4])
             V[0xF] = 0x1;
@@ -141,7 +141,7 @@ public:
         pc += 2;
     }
 
-    void SHR(u_int16_t op)
+    void SHR(uint16_t op)
     {
         if ((V[(op & 0x0F00) >> 8] & 0x1) == 1)
             V[0xF] = 0x1;
@@ -150,7 +150,7 @@ public:
         V[(op & 0x0F00) >> 8] = V[(op & 0x0F00) >> 8] >> 1;
         pc += 2;
     }
-    void SUBN(u_int16_t op)
+    void SUBN(uint16_t op)
     {
         if(V[(op & 0x0F00) >> 8] < V[(op & 0x00F0) >> 4])
             V[0xF] = 0x1;
@@ -162,7 +162,7 @@ public:
         V[(op & 0x0F00) >> 8] = V[(op & 0x00F0) >> 4] - V[(op & 0x0F00) >> 8];
         pc += 2;
     }
-    void SHL(u_int16_t op)
+    void SHL(uint16_t op)
     {
         if(((V[(op & 0x0F00) >> 8]) >> 7) == 1)
             V[0xF] = 0x1;
@@ -173,25 +173,25 @@ public:
         pc += 2;
     }
 
-    void LDI(u_int16_t op)
+    void LDI(uint16_t op)
     {
         I = op & 0x0FFF;
         pc += 2;
     }
-    void JPV0(u_int16_t op)
+    void JPV0(uint16_t op)
     {
         pc = op & 0x0FFF + V[0];
     }
-    void RND(u_int16_t op)
+    void RND(uint16_t op)
     {
         uint8_t randNumber = (rand() % 255) + 1;
         V[(op & 0x0F00) >> 8] = (randNumber & (op & 0x00FF));
         pc += 2;
 
     }
-    typedef void (CPU::*fn)(u_int16_t);
+    typedef void (CPU::*fn)(uint16_t);
     map<uint16_t , fn> fnmap;
-   // void (CPU::*fn[0x16])(u_int16_t);
+   // void (CPU::*fn[0x16])(uint16_t);
 
 
     void initCPU()
@@ -228,16 +228,19 @@ public:
 
 
     }
-    void loadROM(const char* filepath)
+    size_t loadROM(const char* filepath)
     {
         int  i = 0;
         ifstream rom(filepath, ios::ate | ios::binary);
         size_t rom_size = rom.tellg();
+        if ((bool)rom == false) 
+            return 0;
         rom.seekg(0, ios::beg);
         while (!rom.eof()) {
             rom.read(reinterpret_cast<char*> (&memory[i + 0x200]), sizeof(uint8_t));
             i++;
         }
+        return rom.tellg();
     }
 
     void cycle(int num)
