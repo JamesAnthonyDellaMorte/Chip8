@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/jamesdellamorte/CLionProjects/Chip8/CPU.h
+iostream
+-
+cstdint
+-
+string
+-
+stack
+-
+fstream
+-
+map
+-
+
+/Users/jamesdellamorte/CLionProjects/Chip8/chip8.cpp
+iostream
+-
+CPU.h
+/Users/jamesdellamorte/CLionProjects/Chip8/CPU.h
+fstream
+-
+
