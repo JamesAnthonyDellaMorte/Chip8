@@ -3,4 +3,4 @@ project(Chip8)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Chip8 chip8.cpp CPU.h)
+add_executable(Chip8 chip8.cpp CPU.h CPU.cpp)
