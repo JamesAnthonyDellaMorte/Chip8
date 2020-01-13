@@ -17,13 +17,15 @@
 #include <stack>
 #include <fstream>
 #include <map>
-#include <vector>
-#include <algorithm>
 using namespace std;
 
 
 class CPU {
 public:
+    void initCPU();
+    size_t loadROM(const char* filepath);
+    void cycle(int num);
+private:
     unsigned char hexSprites[0x50]  =
             {
                     0xF0, 0x90, 0x90, 0x90, 0xF0, //0
@@ -91,10 +93,7 @@ public:
     // void (CPU::*fn[0x16])(uint16_t);
 
 
-    void initCPU();
 
-    size_t loadROM(const char* filepath);
-    void cycle(int num);
 };
 
 
