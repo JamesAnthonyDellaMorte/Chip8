@@ -10,6 +10,7 @@
 #include <stack>
 #include <fstream>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 
@@ -24,6 +25,7 @@ public:
     uint8_t sound_timer = 0;
     //MEMORY
     uint8_t memory[0x1000];
+    uint8_t key[0xF];
     void CLS(uint16_t op)
     {
         cout << "clear display" << op << endl;
@@ -189,6 +191,95 @@ public:
         pc += 2;
 
     }
+    void SKP(uint16_t op)
+    {
+        if (key[V[(op & 0x0F00) >> 8]] != 0)
+        {
+            pc += 4;
+        }
+        else
+        {
+            pc += 2;
+        }
+    }
+    void SKNP(uint16_t op)
+    {
+        if (key[V[(op & 0x0F00) >> 8]] == 0)
+        {
+            pc += 4;
+        }
+        else
+        {
+            pc += 2;
+        }
+    }
+    void LDVXDT(uint16_t op)
+    {
+        V[(op & 0x0F00) >> 8] = delay_timer;
+        pc += 2;
+    }
+    void LDKEY(uint16_t op)
+    {
+        bool key_pressed = false;
+        while(key_pressed == false)
+        {
+            uint8_t key_val = *max_element(begin(key), end(key));
+            if (key_val != 0)
+            {
+                V[(op & 0x0F00) >> 8] = key_val;
+                bool key_pressed = true;
+           }
+        
+            
+        }
+        pc += 2;
+    }
+
+
+    void LDDTVX(uint16_t op)
+    {
+        delay_timer = V[(op & 0x0F00) >> 8];
+        pc += 2;
+    }
+    void LDSTVX(uint16_t op)
+    {
+        sound_timer = V[(op & 0x0F00) >> 8];
+        pc += 2;
+    }
+    void ADDI(uint16_t op)
+    {
+        I = V[(op & 0x0F00) >> 8] + I;
+        pc += 2;
+
+    }
+    void LDHEXFT(uint16_t op)
+    {
+        I = (op & 0x0F00) >> 8;
+        pc += 2;
+    }
+    void LDB(uint16_t op)
+    {
+        memory[I] = V[(op & 0x0F00) >> 8] / 100;
+        memory[I + 1] = (V[(op & 0x0F00) >> 8] / 10) % 10;
+        memory[I + 2] = (V[(op & 0x0F00) >> 8]) % 10;
+        pc += 2;
+
+
+    }
+    void LDVALL(uint16_t op)
+    {
+        for (int i = 0; i <= ((op & 0x0F00) >> 8); i++)
+            memory[I + i] = V[i];
+
+        pc += 2;
+    }
+    void LDIALL(uint16_t op)
+    {
+        for (int i = 0; i <= ((op & 0x0F00) >> 8); i++)
+            V[i] = memory[I + i] ;
+
+        pc += 2;
+    }
     typedef void (CPU::*fn)(uint16_t);
     map<uint16_t , fn> fnmap;
    // void (CPU::*fn[0x16])(uint16_t);
@@ -225,6 +316,18 @@ public:
         fnmap[0xA] = &CPU::LDI;
         fnmap[0xB] = &CPU::JPV0;
         fnmap[0xC] = &CPU::RND;
+        fnmap[0xE00E] = &CPU::SKP;
+        fnmap[0xE001] = &CPU::SKNP;
+        fnmap[0xF007] = &CPU::LDVXDT;
+        fnmap[0xF00A] = &CPU::LDKEY;
+        fnmap[0xF015] = &CPU::LDDTVX;
+        fnmap[0xF018] = &CPU::LDSTVX;
+        fnmap[0xF01E] = &CPU::ADDI;
+        fnmap[0xF029] = &CPU::LDHEXFT;
+        fnmap[0xF033] = &CPU::LDB;
+        fnmap[0xF055] = &CPU::LDIALL;
+        fnmap[0xF065] = &CPU::LDVALL;
+
 
 
     }
@@ -252,9 +355,13 @@ public:
             if (((opcode & 0xF000) >> 12) == 0) {
                 (this->*fnmap[opcode])(opcode);
             }
-            else if (((opcode & 0xF000) >> 12) == 0x8)
+            else if (((opcode & 0xF000) >> 12) == (0x8 | 0xE))
             {
                 (this->*fnmap[(opcode)-(opcode & 0x0FF0)])(opcode);
+            }
+            else if (((opcode & 0xF000) >> 12) == 0xF)
+            {
+                (this->*fnmap[(opcode)-(opcode & 0x0F00)])(opcode);
             }
             else {
                 (this->*fnmap[(opcode & 0xF000) >> 12])(opcode);

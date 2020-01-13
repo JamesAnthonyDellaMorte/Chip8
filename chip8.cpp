@@ -4,6 +4,7 @@
 using namespace std;
 int main()
 {
+    //TODO make keymap nad graphics array
     CPU cpu;
     cpu.initCPU();
    size_t ret = cpu.loadROM("Pong.ch8");
