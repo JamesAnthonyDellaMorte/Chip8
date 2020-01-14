@@ -17,6 +17,7 @@
 #include <stack>
 #include <fstream>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 
