@@ -322,10 +322,10 @@ size_t CPU::loadROM(const char* filepath)
     return rom.tellg();
 }
 
-void CPU::cycle(int num)
+void CPU::cycle()
 {
 
-    while (num != 0) {
+
         uint16_t  opcode = memory[pc] << 8 | memory[pc + 1];
         auto a = (opcode)-(opcode & 0x0FF0);
         if (((opcode & 0xF000) >> 12) == 0) {
@@ -341,9 +341,9 @@ void CPU::cycle(int num)
         }
         else {
             (this->*fnmap[(opcode & 0xF000) >> 12])(opcode);
-            num--;
+            
         }
-    }
+    
 }
 
 

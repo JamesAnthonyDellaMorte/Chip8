@@ -25,7 +25,7 @@ class CPU {
 public:
     void initCPU();
     size_t loadROM(const char* filepath);
-    void cycle(int num);
+    void cycle();
 private:
     unsigned char hexSprites[0x50]  =
             {
