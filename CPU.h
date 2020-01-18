@@ -26,6 +26,7 @@ public:
     void initCPU();
     size_t loadROM(const char* filepath);
     void cycle();
+    uint8_t key[0xF];
 private:
     unsigned char hexSprites[0x50]  =
             {
@@ -55,7 +56,6 @@ private:
     uint8_t sound_timer = 0;
     //MEMORY
     uint8_t memory[0x1000];
-    uint8_t key[0xF];
     void CLS(uint16_t op);
     void RET(uint16_t op);
     void JP(uint16_t op);

@@ -173,6 +173,7 @@ void CPU::SKP(uint16_t op)
     if (key[V[(op & 0x0F00) >> 8]] != 0)
     {
         pc += 4;
+        memset(key, 0, sizeof(key));
     }
     else
     {
@@ -184,6 +185,7 @@ void CPU::SKNP(uint16_t op)
     if (key[V[(op & 0x0F00) >> 8]] == 0)
     {
         pc += 4;
+        memset(key, 0, sizeof(key));
     }
     else
     {
@@ -209,6 +211,7 @@ void CPU::LDKEY(uint16_t op)
 
 
     }
+    memset(key, 0, sizeof(key));
     pc += 2;
 }
 
@@ -264,6 +267,7 @@ void CPU::initCPU()
 {
     memset(V, 0, sizeof(V));
     memset(memory, 0, sizeof(memory));
+    memset(key, 0, sizeof(key));
     memcpy(memory, hexSprites, (sizeof(hexSprites[0]) * 0x50 ));
     s=stack<uint16_t>();
     I = 0;
@@ -343,7 +347,7 @@ void CPU::cycle()
             (this->*fnmap[(opcode & 0xF000) >> 12])(opcode);
             
         }
-    
+        
 }
 
 
