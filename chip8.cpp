@@ -8,7 +8,7 @@
 #include <array>
 using namespace std;
 void keyboard_check(uint8_t inp[]) {
-    sf::Keyboard::Key keymap[0x15] = {sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4,
+    sf::Keyboard::Key keymap[16] = {sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4,
                                       sf::Keyboard::Q, sf::Keyboard::W, sf::Keyboard::E, sf::Keyboard::R,
                                       sf::Keyboard::A, sf::Keyboard::S, sf::Keyboard::D, sf::Keyboard::F,
                                       sf::Keyboard::Z, sf::Keyboard::X, sf::Keyboard::C, sf::Keyboard::V};
