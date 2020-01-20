@@ -52,7 +52,7 @@ int main()
        while (1) {
 
         cpu.cycle();
-        std::this_thread::sleep_for(std::chrono::seconds(25));
+ //       std::this_thread::sleep_for(std::chrono::seconds(25));
        
        }
        

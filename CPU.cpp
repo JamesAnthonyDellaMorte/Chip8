@@ -3,6 +3,7 @@
 //
 
 #include "CPU.h"
+#include <vector>
 void CPU::CLS(uint16_t op)
 {
     cout << "clear display" << op << endl;
@@ -168,6 +169,17 @@ void CPU::RND(uint16_t op)
     pc += 2;
 
 }
+void CPU::DRW(uint16_t op)
+{
+    vector<uint16_t> vram;
+    auto bytes_to_read = op & 0x000F;
+    for (auto i = 0; i <= bytes_to_read; i++)
+    {
+        vram.push_back(memory[I + i]);
+    }
+    pc += 2;
+}
+
 void CPU::SKP(uint16_t op)
 {
     if (key[V[(op & 0x0F00) >> 8]] != 0)
@@ -296,6 +308,7 @@ void CPU::initCPU()
     fnmap[0xA] = &CPU::LDI;
     fnmap[0xB] = &CPU::JPV0;
     fnmap[0xC] = &CPU::RND;
+    fnmap[0xD] = &CPU::DRW;
     fnmap[0xE00E] = &CPU::SKP;
     fnmap[0xE001] = &CPU::SKNP;
     fnmap[0xF007] = &CPU::LDVXDT;

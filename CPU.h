@@ -78,6 +78,7 @@ private:
     void LDI(uint16_t op);
     void JPV0(uint16_t op);
     void RND(uint16_t op);
+    void DRW(uint16_t op);
     void SKP(uint16_t op);
     void SKNP(uint16_t op);
     void LDVXDT(uint16_t op);
