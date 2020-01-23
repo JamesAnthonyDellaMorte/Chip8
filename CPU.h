@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <string>
 #include <stack>
+#include <array>
 #include <fstream>
 #include <map>
 #include <algorithm>
@@ -27,6 +28,8 @@ public:
     size_t loadROM(const char* filepath);
     void cycle();
     uint8_t key[0xF];
+    uint16_t screen[64 * 32];
+    bool drawFlag;
 private:
     unsigned char hexSprites[0x50]  =
             {

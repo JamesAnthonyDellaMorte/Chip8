@@ -171,12 +171,26 @@ void CPU::RND(uint16_t op)
 }
 void CPU::DRW(uint16_t op)
 {
-    vector<uint16_t> vram;
-    auto bytes_to_read = op & 0x000F;
-    for (auto i = 0; i <= bytes_to_read; i++)
+    uint8_t x = V[(op & 0x0F00) >> 8];
+    uint8_t y = V[(op & 0x00F0) >> 4];
+    uint8_t height = op & 0x000F;
+    uint16_t pixel;
+
+    V[0xF] = 0;
+    for (int yline = 0; yline < height; yline++)
     {
-        vram.push_back(memory[I + i]);
+        pixel = memory[I + yline];
+        for (int xline = 0; xline < 8; xline++)
+        {
+            if ((pixel & (0x80 >> xline)) != 0)
+            {
+                if (screen[(x + xline + ((y + yline) * 64)) % 0x800] == 1)
+                    V[0xF] = 1;
+                screen[x + xline + ((y + yline) * 64) % 0x800] ^= 1;
+            }
+        }
     }
+    drawFlag = true;
     pc += 2;
 }
 
@@ -277,10 +291,12 @@ void CPU::LDIALL(uint16_t op)
 
 void CPU::initCPU()
 {
+    memset(screen, 0, sizeof(screen));
     memset(V, 0, sizeof(V));
     memset(memory, 0, sizeof(memory));
     memset(key, 0, sizeof(key));
     memcpy(memory, hexSprites, (sizeof(hexSprites[0]) * 0x50 ));
+    drawFlag = false;
     s=stack<uint16_t>();
     I = 0;
     pc = 0x200;
